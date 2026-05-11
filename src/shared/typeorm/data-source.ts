@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import path from "path";
-import Bus from "@modules/buses/typeorm/entities/Bus";
+import ServiceOffer from "@modules/service-offers/typeorm/entities/ServiceOffer";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -12,6 +12,6 @@ export const AppDataSource = new DataSource({
     database: "api-terminal",
     synchronize: false, // sempre false em produção/migrations
     logging: true,
-    entities: [Bus],
+    entities: [ServiceOffer],
     migrations: [path.join("src", "shared", "typeorm", "migrations", "*.ts")], subscribers: [],
 }); 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import busesRouter from "@modules/buses/routes/buses.routes";
+import serviceOffersRouter from "@modules/service-offers/routes/service-offers.routes";
 
 const routes = Router();
 
@@ -8,6 +8,6 @@ routes.get('/', (request, response) => {
     return;
 });
 
-routes.use('/buses', busesRouter);
+routes.use('/service-offers', serviceOffersRouter);
 
 export default routes;
