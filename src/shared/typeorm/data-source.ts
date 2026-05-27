@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import path from "path";
-import ServiceOffer from "@modules/service-offers/typeorm/entities/ServiceOffer";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -12,6 +11,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME ?? "api-terminal",
     synchronize: false, // sempre false em produção/migrations
     logging: true,
-    entities: [ServiceOffer],
-    migrations: [path.join("src", "shared", "typeorm", "migrations", "*.ts")], subscribers: [],
+    entities: [path.join(__dirname, "..", "..", "modules", "**", "typeorm", "entities", "*.{ts,js}")],
+    migrations: [path.join(__dirname, "migrations", "*.{ts,js}")],
+    subscribers: [],
 }); 

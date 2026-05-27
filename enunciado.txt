@@ -1,0 +1,163 @@
+Projeto: Plataforma de Serviços Locais (Marketplace de Serviços)
+1. Visão Geral
+Desenvolver uma plataforma web distribuída que conecte:
+
+Prestadores de serviços (ex: eletricista, encanador, designer)
+
+Clientes que desejam contratar serviços
+
+A aplicação deve funcionar como um mini “Uber de serviços”, com foco em arquitetura bem estruturada e boas práticas de engenharia de software.
+
+2. Objetivos de Aprendizagem
+Aplicar:
+
+Engenharia de requisitos
+
+Modelagem (UML)
+
+Arquitetura de software (cliente-servidor / camadas)
+
+Desenvolvimento full-stack
+
+Testes de software
+
+Versionamento com Git
+
+Trabalho em equipe
+
+3. Escopo Funcional (MVP obrigatório)
+Usuários
+Cadastro e login
+
+Perfis (cliente ou prestador)
+
+Prestadores
+Criar perfil com serviços oferecidos
+
+Definir preço e descrição
+
+Disponibilidade básica
+
+Clientes
+Buscar serviços
+
+Visualizar perfis
+
+Solicitar serviço
+
+Sistema
+Registro de solicitações
+
+Status (pendente, aceito, concluído)
+
+Avaliação simples (1–5 estrelas)
+
+4. Requisitos Técnicos
+Arquitetura cliente-servidor
+
+API REST
+
+Banco de dados relacional ou NoSQL
+
+Interface web (responsiva)
+
+Sugestões de Stack (opcional)
+Backend: Node.js / Java / Python
+
+Frontend: React / Vue / HTML + JS
+
+Banco: PostgreSQL / MongoDB
+
+5. Requisitos Não Funcionais
+Segurança básica (login com autenticação)
+
+Usabilidade (interface clara)
+
+Modularidade (código organizado)
+
+Documentação mínima obrigatória
+
+Deploy (local ou nuvem)
+
+6. Estrutura do Projeto (Entregas por Etapa)
+Semana 1–2: Planejamento
+Documento de visão
+
+Levantamento de requisitos
+
+Casos de uso
+
+Semana 3–4: Modelagem
+Diagrama de casos de uso
+
+Diagrama de classes
+
+Arquitetura (camadas ou microserviços simples)
+
+Semana 5–8: Desenvolvimento
+Backend funcional (API)
+
+Frontend básico
+
+Integração com banco de dados
+
+Documentação
+
+Semana 9–10: Testes
+Testes unitários
+
+Testes de integração
+
+Correções
+
+Documentação
+
+Semana 11–12: Finalização
+Deploy
+
+Documentação final
+
+Apresentação
+
+7. Organização das Equipes (até 3 alunos)
+Sugestão de papéis:
+
+Dev Backend
+
+Dev Frontend
+
+Engenheiro de Software (documentação/testes/integração)
+
+(Papéis podem se sobrepor)
+
+8. Diferenciais (para avaliação extra)
+Chat em tempo real
+
+Notificações
+
+Geolocalização
+
+Sistema de pagamento simulado
+
+Deploy em nuvem (ex: AWS, Vercel)
+
+10. Possíveis Extensões (se avançarem bem)
+Versão mobile
+
+Microserviços
+
+Uso de filas (ex: mensageria)
+
+Recomendação de serviços
+
+11. Resultado Esperado
+Ao final, cada equipe terá:
+
+Um sistema funcional real
+
+Experiência prática de desenvolvimento completo
+
+Documentação de projeto de desenvolvimento
+
+Noção de sistemas distribuídos e SaaS
+

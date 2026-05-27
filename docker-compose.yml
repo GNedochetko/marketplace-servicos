@@ -6,13 +6,13 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: docker
-      POSTGRES_DB: api-terminal
+      POSTGRES_DB: api-marketplace-services
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d api-terminal"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d api-marketplace-services"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,7 +32,8 @@ services:
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: docker
-      DB_NAME: api-terminal
+      DB_NAME: api-marketplace-services
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
       PORT: 5000
     ports:
       - "5000:5000"
