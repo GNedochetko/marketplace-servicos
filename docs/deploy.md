@@ -88,6 +88,29 @@ server {
 Mantenha o firewall da VM liberando externamente apenas `80` e `443`. A porta configurada
 em `APP_PORT` fica vinculada ao loopback e nao deve ser publicada externamente.
 
+### OpenResty ou Nginx Proxy Manager em container
+
+Se o proxy reverso tambem estiver em um container, ele nao consegue acessar uma porta
+publicada somente em `127.0.0.1` da VM. Alem disso, `127.0.0.1` dentro do OpenResty aponta
+para o proprio container do proxy.
+
+Nesse caso, configure no `.env.deploy`:
+
+```env
+APP_BIND_ADDRESS=0.0.0.0
+APP_PORT=8080
+```
+
+Recrie o frontend:
+
+```bash
+docker compose --env-file .env.deploy -f docker-compose.deploy.yml up -d --build frontend
+```
+
+No OpenResty/Nginx Proxy Manager, encaminhe para o IP privado da VM na porta `8080`, nunca
+para `127.0.0.1` ou `localhost`. Mantenha a porta `8080` bloqueada externamente pelo
+firewall da VM, liberando somente `80` e `443`.
+
 ## Limites configurados
 
 | Servico | CPU | Memoria maxima | Reserva | PIDs |
@@ -103,8 +126,7 @@ mais acessos.
 ## Isolamento da rede
 
 A rede do banco e interna ao Docker. A rede entre frontend e backend precisa aceitar a
-conexao do Nginx externo via porta publicada no loopback, portanto nao pode ser marcada
-como `internal`.
+conexao do proxy reverso, portanto nao pode ser marcada como `internal`.
 
 Se movimento lateral for uma preocupacao mesmo dentro da VM dedicada, aplique regras de
 firewall de saida na VM para bloquear acesso aos CIDRs privados e administrativos da
