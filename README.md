@@ -193,6 +193,38 @@ Authorization: Bearer TOKEN_AQUI
 
 As senhas sao armazenadas com hash usando `bcryptjs`.
 
+## Logins De Demonstracao
+
+Use estes acessos quando o banco de demonstracao ja estiver populado.
+
+Clientes:
+
+```txt
+Ana Souza
+E-mail: ana@demo.com
+Senha:  demo123
+
+Carlos Lima
+E-mail: carlos@demo.com
+Senha:  demo123
+```
+
+Prestadores:
+
+```txt
+Joao Eletrica
+E-mail: joao@demo.com
+Senha:  demo123
+
+Lucas Reparos
+E-mail: lucas@demo.com
+Senha:  demo123
+
+Marina Design
+E-mail: marina@demo.com
+Senha:  demo123
+```
+
 ## Modulos Da API
 
 ```txt

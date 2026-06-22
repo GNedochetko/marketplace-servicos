@@ -370,6 +370,16 @@ button {
   font-weight: 800
 }
 
+.avatar-photo {
+  overflow: hidden;
+  border: 2px solid #fff;
+  background-color: var(--mint);
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 6px 16px rgba(20, 45, 34, .12);
+  color: transparent
+}
+
 .section,
 .how {
   min-width: 0;
@@ -488,6 +498,19 @@ button {
   gap: 12px;
   margin-top: auto;
   padding-top: 22px
+}
+
+.request-party,
+.detail-profile {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 12px
+}
+
+.request-party>div,
+.detail-profile>div {
+  min-width: 0
 }
 
 .provider-row div {

@@ -22,6 +22,10 @@ const providers = ref<Provider[]>([]);
 const offers = ref<ServiceOffer[]>([]);
 const requests = ref<ServiceRequest[]>([]);
 const reviews = ref<Record<string, Awaited<ReturnType<typeof api.reviews>>>>({});
+const profileImages = {
+  client: "/profiles/client.jpg",
+  provider: "/profiles/provider.jpg",
+} as const;
 
 const authForm = reactive({ name: "", email: "", password: "", role: "client" as UserRole });
 const accountForm = reactive({ name: "", email: "", password: "" });
@@ -75,6 +79,15 @@ async function loadData() {
 
 function providerName(id: string) {
   return providers.value.find((item) => item.id === id)?.user?.name ?? "Prestador local";
+}
+function providerAvatar(id: string) {
+  return profileImages.provider;
+}
+function userAvatar(role?: UserRole) {
+  return role === "provider" ? profileImages.provider : profileImages.client;
+}
+function avatarStyle(src: string) {
+  return { backgroundImage: `url(${src})` };
 }
 function statusLabel(status: ServiceRequest["status"]) {
   return { pending: "Pendente", accepted: "Aceito", completed: "Concluído", canceled: "Cancelado" }[status];
@@ -249,7 +262,7 @@ async function submitReview() {
           <div class="hero-stats"><span><strong>{{ offers.length }}</strong> serviços</span><span><strong>{{ providers.length }}</strong> profissionais</span><span><strong>{{ categories.length }}</strong> categorias</span></div>
         </div>
         <div class="hero-art">
-          <div class="art-card art-card-main"><span class="avatar">JD</span><div><strong>Profissionais locais</strong><small>Disponíveis na sua região</small></div><span class="online"></span></div>
+          <div class="art-card art-card-main"><span class="avatar avatar-photo" :style="avatarStyle(profileImages.provider)">PR</span><div><strong>Profissionais locais</strong><small>Disponíveis na sua região</small></div><span class="online"></span></div>
           <div class="art-card art-card-price"><small>A partir de</small><strong>{{ offers[0] ? money(offers[0].price) : 'R$ 80' }}</strong></div>
           <div class="art-shape"><span>✓</span></div>
         </div>
@@ -265,7 +278,7 @@ async function submitReview() {
           <article v-for="offer in filteredOffers" :key="offer.id" class="service-card" @click="openOffer(offer)">
             <div class="service-top"><span class="category-pill">{{ offer.category?.name ?? "Serviço local" }}</span><span class="card-arrow">↗</span></div>
             <h3>{{ offer.title }}</h3><p>{{ offer.description }}</p>
-            <div class="provider-row"><span class="avatar">{{ providerName(offer.provider_id).slice(0, 2).toUpperCase() }}</span><div><strong>{{ providerName(offer.provider_id) }}</strong><small>{{ offer.availability || "Consulte disponibilidade" }}</small></div></div>
+            <div class="provider-row"><span class="avatar avatar-photo" :style="avatarStyle(providerAvatar(offer.provider_id))">{{ providerName(offer.provider_id).slice(0, 2).toUpperCase() }}</span><div><strong>{{ providerName(offer.provider_id) }}</strong><small>{{ offer.availability || "Consulte disponibilidade" }}</small></div></div>
             <div class="service-footer"><span>A partir de</span><strong>{{ money(offer.price) }}</strong></div>
           </article>
         </div>
@@ -309,12 +322,12 @@ async function submitReview() {
         </template>
 
         <div class="panel-section"><div class="section-heading compact"><div><h2>{{ session.user.role === "client" ? "Minhas solicitações" : "Solicitações recebidas" }}</h2><p>{{ myRequests.length }} registros</p></div><RouterLink v-if="session.user.role === 'client'" class="button button-secondary" to="/">Encontrar serviço</RouterLink></div>
-          <div class="request-list"><article v-for="item in myRequests" :key="item.id" class="request-card"><div class="request-main"><div><span class="status" :class="item.status">{{ statusLabel(item.status) }}</span><h3>{{ item.service_offer?.title ?? "Serviço solicitado" }}</h3><p>{{ session.user.role === "client" ? providerName(item.provider_id) : item.client?.name }}</p></div><div class="request-meta"><span>{{ date(item.created_at) }}</span><strong>{{ item.service_offer ? money(item.service_offer.price) : "" }}</strong></div></div><p v-if="item.notes" class="request-notes">“{{ item.notes }}”</p><div class="request-actions"><button v-if="session.user.role === 'client' && item.status === 'pending'" class="button button-ghost" @click="setStatus(item, 'canceled')">Cancelar</button><button v-if="session.user.role === 'client' && item.status === 'completed'" class="button button-secondary" @click="openReview(item)">Avaliar serviço</button><button v-if="session.user.role === 'provider' && item.status === 'pending'" class="button" @click="setStatus(item, 'accepted')">Aceitar</button><button v-if="session.user.role === 'provider' && item.status === 'accepted'" class="button" @click="setStatus(item, 'completed')">Marcar como concluído</button></div></article><div v-if="!myRequests.length" class="empty small"><h3>Nenhuma solicitação por enquanto</h3><p>Novos pedidos aparecerão aqui.</p></div></div>
+          <div class="request-list"><article v-for="item in myRequests" :key="item.id" class="request-card"><div class="request-main"><div class="request-party"><span class="avatar avatar-photo" :style="avatarStyle(session.user.role === 'client' ? providerAvatar(item.provider_id) : userAvatar(item.client?.role))">{{ (session.user.role === "client" ? providerName(item.provider_id) : item.client?.name ?? "Cliente").slice(0, 2).toUpperCase() }}</span><div><span class="status" :class="item.status">{{ statusLabel(item.status) }}</span><h3>{{ item.service_offer?.title ?? "Serviço solicitado" }}</h3><p>{{ session.user.role === "client" ? providerName(item.provider_id) : item.client?.name }}</p></div></div><div class="request-meta"><span>{{ date(item.created_at) }}</span><strong>{{ item.service_offer ? money(item.service_offer.price) : "" }}</strong></div></div><p v-if="item.notes" class="request-notes">“{{ item.notes }}”</p><div class="request-actions"><button v-if="session.user.role === 'client' && item.status === 'pending'" class="button button-ghost" @click="setStatus(item, 'canceled')">Cancelar</button><button v-if="session.user.role === 'client' && item.status === 'completed'" class="button button-secondary" @click="openReview(item)">Avaliar serviço</button><button v-if="session.user.role === 'provider' && item.status === 'pending'" class="button" @click="setStatus(item, 'accepted')">Aceitar</button><button v-if="session.user.role === 'provider' && item.status === 'accepted'" class="button" @click="setStatus(item, 'completed')">Marcar como concluído</button></div></article><div v-if="!myRequests.length" class="empty small"><h3>Nenhuma solicitação por enquanto</h3><p>Novos pedidos aparecerão aqui.</p></div></div>
         </div>
       </template>
     </section>
 
-    <div v-if="selectedOffer" class="modal-backdrop" @click.self="selectedOffer = null"><section class="modal"><button class="modal-close" @click="selectedOffer = null">×</button><span class="category-pill">{{ selectedOffer.category?.name }}</span><h2>{{ selectedOffer.title }}</h2><p>{{ selectedOffer.description }}</p><div class="detail-grid"><div><small>Profissional</small><strong>{{ providerName(selectedOffer.provider_id) }}</strong></div><div><small>Preço inicial</small><strong>{{ money(selectedOffer.price) }}</strong></div><div><small>Disponibilidade</small><strong>{{ selectedOffer.availability || "A combinar" }}</strong></div></div><div class="reviews"><h3>Avaliações</h3><article v-for="review in reviews[selectedOffer.provider_id]" :key="review.id"><span class="stars">{{ "★".repeat(review.rating) }}{{ "☆".repeat(5 - review.rating) }}</span><p>{{ review.comment || "Cliente satisfeito com o serviço." }}</p><small>{{ review.client?.name ?? "Cliente" }}</small></article><p v-if="!reviews[selectedOffer.provider_id]?.length" class="muted">Este profissional ainda não possui avaliações.</p></div><template v-if="session?.user.role === 'client'"><label>Conte brevemente o que precisa<textarea v-model="requestNotes" rows="3"></textarea></label><button class="button button-full" :disabled="busy" @click="requestService">Solicitar este serviço</button></template><RouterLink v-else-if="!session" class="button button-full" to="/entrar" @click="selectedOffer = null">Entre para solicitar</RouterLink></section></div>
+    <div v-if="selectedOffer" class="modal-backdrop" @click.self="selectedOffer = null"><section class="modal"><button class="modal-close" @click="selectedOffer = null">×</button><span class="category-pill">{{ selectedOffer.category?.name }}</span><h2>{{ selectedOffer.title }}</h2><p>{{ selectedOffer.description }}</p><div class="detail-grid"><div class="detail-profile"><span class="avatar avatar-photo" :style="avatarStyle(providerAvatar(selectedOffer.provider_id))">{{ providerName(selectedOffer.provider_id).slice(0, 2).toUpperCase() }}</span><div><small>Profissional</small><strong>{{ providerName(selectedOffer.provider_id) }}</strong></div></div><div><small>Preço inicial</small><strong>{{ money(selectedOffer.price) }}</strong></div><div><small>Disponibilidade</small><strong>{{ selectedOffer.availability || "A combinar" }}</strong></div></div><div class="reviews"><h3>Avaliações</h3><article v-for="review in reviews[selectedOffer.provider_id]" :key="review.id"><span class="stars">{{ "★".repeat(review.rating) }}{{ "☆".repeat(5 - review.rating) }}</span><p>{{ review.comment || "Cliente satisfeito com o serviço." }}</p><small>{{ review.client?.name ?? "Cliente" }}</small></article><p v-if="!reviews[selectedOffer.provider_id]?.length" class="muted">Este profissional ainda não possui avaliações.</p></div><template v-if="session?.user.role === 'client'"><label>Conte brevemente o que precisa<textarea v-model="requestNotes" rows="3"></textarea></label><button class="button button-full" :disabled="busy" @click="requestService">Solicitar este serviço</button></template><RouterLink v-else-if="!session" class="button button-full" to="/entrar" @click="selectedOffer = null">Entre para solicitar</RouterLink></section></div>
     <div v-if="reviewTarget" class="modal-backdrop" @click.self="reviewTarget = null"><form class="modal" @submit.prevent="submitReview"><button type="button" class="modal-close" @click="reviewTarget = null">×</button><p class="eyebrow">Sua experiência</p><h2>Avaliar serviço</h2><label>Nota<select v-model="reviewForm.rating"><option v-for="rating in 5" :key="rating" :value="rating">{{ rating }} {{ rating === 1 ? "estrela" : "estrelas" }}</option></select></label><label>Comentário<textarea v-model="reviewForm.comment" rows="4" placeholder="Como foi o serviço?"></textarea></label><button class="button button-full" :disabled="busy">Publicar avaliação</button></form></div>
   </main>
 </template>
